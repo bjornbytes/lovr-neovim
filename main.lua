@@ -4,12 +4,13 @@ function lovr.load()
   lovr.graphics.setBackgroundColor(.1, .1, .12)
   lovr.system.setKeyRepeat(true)
 
-  pose = Mat4(0, 1.7, -1)
+  pose = lovr.math.newMat4(0, 1.7, -1)
+  inverse = lovr.math.newMat4(pose):invert()
   width = 1.4
   height = 1
   cursors = {}
 
-  useLayer = true and lovr.headset.getDriver() ~= 'simulator'
+  useLayer = lovr.headset.isActive()
   ppm = useLayer and 1500 or 1
 
   if useLayer then
@@ -36,8 +37,6 @@ function lovr.update(dt)
     -- Lazily initialize cursor
     if not cursors[hand] then
       cursors[hand] = {
-        position = Vec3(),
-        direction = Vec3(),
         inside = false,
         scroll = 0,
         row = 0,
@@ -49,20 +48,20 @@ function lovr.update(dt)
 
     local cursor = cursors[hand]
 
-    cursor.position:set(lovr.headset.getPosition(pointer))
-    cursor.direction:set(lovr.headset.getDirection(pointer))
+    cursor.position = vector(lovr.headset.getPosition(pointer))
+    cursor.direction = vector(lovr.headset.getDirection(pointer))
 
     -- Get cursor ray relative to editor
-    local inverse = mat4(pose):invert()
+    inverse:set(pose):invert()
     local origin = inverse * cursor.position
-    local direction = quat(inverse) * cursor.direction
+    local direction = quaternion(inverse:getOrientation()) * cursor.direction
 
     -- Intersect cursor with plane
     local t = -origin.z / direction.z
     local x, y = (origin + direction * t):unpack()
 
     cursor.x, cursor.y = x, y
-    cursor.inside = t > 0 and x > -width/2 and x < width/2 and y > -height/2 and y < height/2
+    cursor.inside = t > 0 and x > -width / 2 and x < width / 2 and y > -height / 2 and y < height / 2
 
     -- Virtual mouse events
     if cursor.inside then
