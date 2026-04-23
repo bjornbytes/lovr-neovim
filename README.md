@@ -8,7 +8,7 @@ library is minimal in nature and is designed to be embedded in a larger developm
 Note: this requires 2 native LÖVR plugins, [`lua-mp`](https://github.com/bjornbytes/lua-mp/tree/lovr) and
 [`luv`](https://github.com/bjornbytes/luv/tree/lovr).
 
-![com oculus vrshell-20250116-174734](https://github.com/user-attachments/assets/6d4d8d20-7bfb-4dbf-a47f-b842ee038599)
+https://github.com/user-attachments/assets/467fc989-be55-4fbb-8d3d-5e529cf9d5d5
 
 Features
 ---
